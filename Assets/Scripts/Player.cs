@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameManager gameManager;
     public Transform spawnner;
+    public Transform dontFlip;
+    public GameObject popUpPrefab;
     Vector3 direction;
     Vector3 scale;
     Animator animator;
@@ -70,6 +73,12 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         checkCollision(collision);
+
+        if (collision.CompareTag("Close"))
+        {
+            gameManager.AddScore(15f);
+            ShowPopUp("CloseOne");
+        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -81,7 +90,7 @@ public class Player : MonoBehaviour
         Debug.Log("Collided");
         if (!inAir)
         {
-            if (collider.CompareTag("Obstacle") || collider.CompareTag("Tree"))
+            if (collider.CompareTag("Obstacle"))
             {
                 gameManager.GameOver();
             }
@@ -95,18 +104,22 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ShowPopUp(string message)
+    {
+        Debug.Log(message);
+        GameObject popup = Instantiate(popUpPrefab, transform.position, Quaternion.identity);
+        TMP_Text text= popup.GetComponentInChildren<TMP_Text>();
+        text.text = message;
+    }
+
     IEnumerator Jump()
     {
-        Debug.Log("Jump");
         isJumping = true;
-        Vector3 originalScale = scale;
-        //scale = scale*1.5f;
-        // transform.localScale = scale;
+        ShowPopUp("jump");
+        gameManager.AddScore(12f);
         animator.SetBool("isJumping",true);
         yield return new WaitForSeconds(.5f);
         animator.SetBool("isJumping", false);
-        //scale = originalScale;
-        //transform.localScale = scale;
         isJumping = false;
     }
 }

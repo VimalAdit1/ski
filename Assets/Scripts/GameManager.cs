@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     {
         gameOverUI.SetActive(false);
         isGameRunning = true;
-        maxObstacles = 30;
+        maxObstacles = 20;
         noOfObstacles = 0;
         score = 0;
     }

@@ -16,8 +16,10 @@ public class Player : MonoBehaviour
     Animator animator;
     bool isJumping = false;
     public bool inAir = false;
+    Dictionary<string, List<string>> messages;
     void Start()
     {
+        initializeMessages();
         direction = Vector2.down;
         spawnner.transform.up = direction;
         scale = new Vector3(0.5f, 0.5f, 0.5f);
@@ -25,6 +27,24 @@ public class Player : MonoBehaviour
         animator.SetBool("isStraight", true);
     }
 
+    private void initializeMessages()
+    {
+        messages = new Dictionary<string, List<string>>();
+        messages.Add("Jump", new List<string>() { "Wooosh", "boink", "Pop", "Boom" });
+        messages.Add("CloseOne", new List<string>() { "Close...", "Phew", "WooooW", "Niceee","Not today" });
+    }
+    private string getRandomMessage(string key)
+    {
+        string message = key;
+        List<string> messageList = messages[key];
+        if(messageList.Count!=0)
+        {
+            var random = new System.Random();
+            int index = random.Next(messageList.Count);
+            message = messageList[index];
+        }
+        return message;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -34,7 +54,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        transform.position = transform.position  + direction* Time.deltaTime*10f;
+        transform.position = transform.position  + direction* Time.deltaTime*15f;
         spawnner.transform.up = direction;
     }
 
@@ -77,7 +97,7 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Close"))
         {
             gameManager.AddScore(15f);
-            ShowPopUp("CloseOne");
+            ShowPopUp(getRandomMessage("CloseOne"));
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -106,7 +126,6 @@ public class Player : MonoBehaviour
 
     private void ShowPopUp(string message)
     {
-        Debug.Log(message);
         GameObject popup = Instantiate(popUpPrefab, transform.position, Quaternion.identity);
         TMP_Text text= popup.GetComponentInChildren<TMP_Text>();
         text.text = message;
@@ -115,7 +134,7 @@ public class Player : MonoBehaviour
     IEnumerator Jump()
     {
         isJumping = true;
-        ShowPopUp("jump");
+        ShowPopUp(getRandomMessage("Jump"));
         gameManager.AddScore(12f);
         animator.SetBool("isJumping",true);
         yield return new WaitForSeconds(.5f);

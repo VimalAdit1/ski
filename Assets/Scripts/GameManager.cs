@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     int maxObstacles;
     int noOfObstacles;
     float score;
+    float nextScore;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
         maxObstacles = 20;
         noOfObstacles = 0;
         score = 0;
+        nextScore = 50;
     }
 
     // Update is called once per frame
@@ -43,6 +45,16 @@ public class GameManager : MonoBehaviour
     private void UpdateScore()
     {
         scoreText.text = ((int)score).ToString();
+        UpdateSpeed();
+    }
+
+    private void UpdateSpeed()
+    {
+        if(score>=nextScore)
+        {
+            nextScore = score + (score / 1.5f);
+            player.GetComponent<Player>().AddSpeed(1f);
+        }
     }
 
     private void SpawnObstacles()

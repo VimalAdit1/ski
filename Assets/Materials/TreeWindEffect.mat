@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WindEffect
+  m_Name: TreeWindEffect
   m_Shader: {fileID: -6465566751694194690, guid: 6ab038ac3e4fbae49a5061d333dc3a7b,
     type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
@@ -21,8 +21,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_56B36253:
-        m_Texture: {fileID: 2800000, guid: b26122609b287e343a953e16d7c36564, type: 3}
+        m_Texture: {fileID: 2800000, guid: bc89cf0cc8d818145b642939846deff2, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    m_Floats: []
+    m_Floats:
+    - Vector1_2A1E7E89: 0.5
     m_Colors: []

@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     Animator animator;
     bool isJumping = false;
     public bool inAir = false;
+    float speed;
     Dictionary<string, List<string>> messages;
     void Start()
     {
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour
         direction = Vector2.down;
         spawnner.transform.up = direction;
         scale = new Vector3(0.5f, 0.5f, 0.5f);
+        speed = 5f;
         animator = GetComponent<Animator>();
         animator.SetBool("isStraight", true);
     }
@@ -54,7 +56,7 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        transform.position = transform.position  + direction* Time.deltaTime*15f;
+        transform.position = transform.position  + direction* Time.deltaTime*speed;
         spawnner.transform.up = direction;
     }
 
@@ -140,5 +142,13 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         animator.SetBool("isJumping", false);
         isJumping = false;
+    }
+    public void SetSpeed(float f)
+    {
+        speed = f;
+    }
+    public void AddSpeed(float f)
+    {
+        speed += f;
     }
 }

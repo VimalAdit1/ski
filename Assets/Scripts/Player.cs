@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
         initializeMessages();
         direction = Vector2.down;
         spawnner.transform.up = direction;
-        scale = new Vector3(0.5f, 0.5f, 0.5f);
+        scale = transform.localScale;
         speed = 5f;
         animator = GetComponent<Animator>();
         animator.SetBool("isStraight", true);
@@ -64,24 +64,45 @@ public class Player : MonoBehaviour
     {
         if (!isJumping)
         {
-            float horizontal = Input.GetAxis("Horizontal");
-            if (Input.GetButtonDown("Jump"))
+            //float horizontal = Input.GetAxis("Horizontal");
+            float horizontal = Input.acceleration.x;
+            if (horizontal > 0.5)
+            {
+                horizontal = 1;
+            }
+            else if (horizontal < -0.5)
+            {
+                horizontal = -1;
+            }
+            else
+            {
+                horizontal = 0;
+            }
+            if (Input.GetButtonDown("Jump")||Input.touchCount>0)
             {
 
                 StartCoroutine(Jump());
             }
-            if (horizontal > 0)
+            if (horizontal == 1)
             {
                 direction = new Vector2(1f, -1f);
-                scale = new Vector3(0.5f, 0.5f, 0.5f);
+                scale = transform.localScale;
+                if (scale.x < 0)
+                {
+                    scale.x = -scale.x;
+                }
                 transform.localScale = scale;
                 animator.SetBool("isStraight", false);
             }
-            else if (horizontal < 0)
+            else if (horizontal == -1)
 
             {
                 direction = new Vector2(-1f, -1f);
-                scale = new Vector3(-0.5f, 0.5f, 0.5f);
+                scale = transform.localScale;
+                if (scale.x > 0)
+                {
+                    scale.x = -scale.x;
+                }
                 transform.localScale = scale;
                 animator.SetBool("isStraight", false);
             }

@@ -11,12 +11,14 @@ public class Player : MonoBehaviour
     public Transform spawnner;
     public Transform dontFlip;
     public GameObject popUpPrefab;
+    TrailRenderer trail;
     Vector3 direction;
     Vector3 scale;
     Animator animator;
     bool isJumping = false;
     public bool inAir = false;
     float speed;
+    public int price;
     Dictionary<string, List<string>> messages;
     void Start()
     {
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
         scale = transform.localScale;
         speed = 5f;
         animator = GetComponent<Animator>();
+        trail = GetComponentInChildren<TrailRenderer>();
         animator.SetBool("isStraight", true);
     }
 
@@ -33,7 +36,8 @@ public class Player : MonoBehaviour
     {
         messages = new Dictionary<string, List<string>>();
         messages.Add("Jump", new List<string>() { "Wooosh", "boink", "Pop", "Boom" });
-        messages.Add("CloseOne", new List<string>() { "Close...", "Phew", "WooooW", "Niceee","Not today" });
+        messages.Add("CloseOne", new List<string>() { "Close...", "Phew", "WooooW", "Niceee","Not today","Bigiluuuuu" });
+        messages.Add("Coins", new List<string>() { "Money money money...", "$$$$$", "Hot cash", "Im Rich" });
     }
     private string getRandomMessage(string key)
     {
@@ -64,13 +68,13 @@ public class Player : MonoBehaviour
     {
         if (!isJumping)
         {
-            //float horizontal = Input.GetAxis("Horizontal");
-            float horizontal = Input.acceleration.x;
-            if (horizontal > 0.5)
+            float horizontal = Input.GetAxis("Horizontal");
+            //float horizontal = Input.acceleration.x;
+            if (horizontal > 0.2)
             {
                 horizontal = 1;
             }
-            else if (horizontal < -0.5)
+            else if (horizontal < -0.2)
             {
                 horizontal = -1;
             }
@@ -120,7 +124,15 @@ public class Player : MonoBehaviour
         if (collision.CompareTag("Close"))
         {
             gameManager.AddScore(15f);
+            gameManager.AddCoin(15);
             ShowPopUp(getRandomMessage("CloseOne"));
+        }
+        else if (collision.CompareTag("Coin"))
+        {
+            Destroy(collision.gameObject);
+            gameManager.Destroyed();
+            gameManager.AddCoin(50);
+            ShowPopUp(getRandomMessage("Coins"));
         }
     }
     private void OnTriggerStay2D(Collider2D collision)
@@ -130,7 +142,6 @@ public class Player : MonoBehaviour
 
     private void checkCollision(Collider2D collider)
     {
-        Debug.Log("Collided");
         if (!inAir)
         {
             if (collider.CompareTag("Obstacle"))
@@ -157,12 +168,15 @@ public class Player : MonoBehaviour
     IEnumerator Jump()
     {
         isJumping = true;
+        trail.emitting = false;
         ShowPopUp(getRandomMessage("Jump"));
         gameManager.AddScore(12f);
+        gameManager.AddCoin(15);
         animator.SetBool("isJumping",true);
         yield return new WaitForSeconds(.5f);
         animator.SetBool("isJumping", false);
         isJumping = false;
+        trail.emitting = true;
     }
     public void SetSpeed(float f)
     {

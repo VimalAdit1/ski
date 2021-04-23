@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         if(score>=nextScore)
         {
             nextScore = score + (score / 1.5f);
-            player.GetComponent<Player>().AddSpeed(1f);
+            player.GetComponent<Player>().AddSpeed(0.3f);
         }
     }
 

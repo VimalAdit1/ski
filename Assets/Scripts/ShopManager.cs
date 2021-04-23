@@ -25,6 +25,7 @@ public class ShopManager : MonoBehaviour
         coins = PlayerPrefs.GetInt("Coins", 0);
         owned = PlayerPrefs.GetString("Owned", "0");
         ownedskins = owned.Split(',');
+        
         foreach (String skin in ownedskins)
         {
             skinsList.Add(skin);
@@ -37,6 +38,7 @@ public class ShopManager : MonoBehaviour
         {
 
         }
+        changeShip(0);
     }
     // Update is called once per frame
     void Update()

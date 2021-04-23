@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public Transform spawnner;
     public Transform dontFlip;
     public GameObject popUpPrefab;
+    public GameObject particle;
     TrailRenderer trail;
     Vector3 direction;
     Vector3 scale;
@@ -54,8 +55,8 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        checkInput(); 
-        Move(); 
+        checkInput();
+        Move();
     }
 
     private void Move()
@@ -168,19 +169,32 @@ public class Player : MonoBehaviour
     IEnumerator Jump()
     {
         isJumping = true;
-        trail.emitting = false;
         ShowPopUp(getRandomMessage("Jump"));
         gameManager.AddScore(12f);
         gameManager.AddCoin(15);
         animator.SetBool("isJumping",true);
         yield return new WaitForSeconds(.5f);
+       
         animator.SetBool("isJumping", false);
         isJumping = false;
-        trail.emitting = true;
+        
     }
     public void SetSpeed(float f)
     {
         speed = f;
+    }
+    public void TriggerJump()
+    {
+        trail.emitting = !trail.emitting;
+        if(trail.emitting)
+        {
+            AudioManager.instance.StartPlaying("Land");
+        }
+        else
+        {
+            AudioManager.instance.StartPlaying("Jump");
+        }
+        Instantiate(particle, this.transform.position, Quaternion.identity);
     }
     public void AddSpeed(float f)
     {

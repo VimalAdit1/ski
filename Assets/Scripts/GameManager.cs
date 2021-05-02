@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 
@@ -11,6 +13,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] spawnners;
     public GameObject gameOverUI;
     public GameObject pauseMenu;
+    public GameObject shieldButton;
     public TMP_Text scoreText;
     public TMP_Text coinsText;
     public TMP_Text gameOverScoreText;
@@ -21,10 +24,13 @@ public class GameManager : MonoBehaviour
     float score;
     int coins;
     float nextScore;
+    float shieldScore;
+    bool isShielded;
     // Start is called before the first frame update
     void Start()
     {
         gameOverUI.SetActive(false);
+        shieldButton.SetActive(false);
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             isGameRunning = false;
@@ -39,6 +45,8 @@ public class GameManager : MonoBehaviour
         coins = PlayerPrefs.GetInt("Coins", 0);
         UpdateCoins();
         nextScore = 50;
+        shieldScore = 200;
+        isShielded = false;
     }
 
     // Update is called once per frame
@@ -60,6 +68,32 @@ public class GameManager : MonoBehaviour
     {
         scoreText.text = ((int)score).ToString();
         UpdateSpeed();
+        CheckShield();
+    }
+
+    private void CheckShield()
+    {
+        if(score>shieldScore&&!isShielded)
+        {
+            shieldButton.SetActive(true);
+        }
+    }
+
+    public void GetShield()
+    {
+        shieldButton.SetActive(false);
+        isShielded = true;
+        Player p = player.GetComponent<Player>();
+        p.SetShield(true);
+    }
+
+    public void ShieldDestroyed()
+    {
+        isShielded = false;
+        Player p = player.GetComponent<Player>();
+        p.SetShield(false);
+        shieldScore = score + 200;
+        DestroyAll();
     }
 
     private void UpdateSpeed()
@@ -190,5 +224,14 @@ public class GameManager : MonoBehaviour
 
         }
     }
-
+    public void DestroyAll()
+    {
+       Obstacle[] liveObstacles = FindObjectsOfType<Obstacle>();
+        foreach(Obstacle o in liveObstacles)
+        {
+            Destroy(o.gameObject);
+        }
+        noOfObstacles = 0;
+        AudioManager.instance.StartPlaying("GameOver");
+    }
 }

@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public Transform dontFlip;
     public GameObject popUpPrefab;
     public GameObject particle;
+    public GameObject shield;
     TrailRenderer trail;
     Vector3 direction;
     Vector3 scale;
@@ -20,9 +21,11 @@ public class Player : MonoBehaviour
     public bool inAir = false;
     float speed;
     public int price;
+    bool isShielded;
     Dictionary<string, List<string>> messages;
     void Start()
     {
+        shield.SetActive(false);
         initializeMessages();
         direction = Vector2.down;
         spawnner.transform.up = direction;
@@ -31,6 +34,7 @@ public class Player : MonoBehaviour
         animator = GetComponent<Animator>();
         trail = GetComponentInChildren<TrailRenderer>();
         animator.SetBool("isStraight", true);
+        isShielded = false;
     }
 
     private void initializeMessages()
@@ -69,8 +73,8 @@ public class Player : MonoBehaviour
     {
         if (!isJumping)
         {
-            //float horizontal = Input.GetAxis("Horizontal");
-            float horizontal = Input.acceleration.x;
+            float horizontal = Input.GetAxis("Horizontal");
+            //float horizontal = Input.acceleration.x;
             if (horizontal > 0.2)
             {
                 horizontal = 1;
@@ -147,18 +151,30 @@ public class Player : MonoBehaviour
         {
             if (collider.CompareTag("Obstacle"))
             {
-                gameManager.GameOver();
+                checkShield(collider);
             }
         }
         else
         {
             if (collider.CompareTag("Tree"))
             {
-                gameManager.GameOver();
+                checkShield(collider);
             }
         }
     }
-
+    void checkShield(Collider2D collider)
+    {
+        if (!isShielded)
+        {
+            gameManager.GameOver();
+        }
+        else
+        {
+            gameManager.ShieldDestroyed();
+            Destroy(collider.gameObject);
+            gameManager.Destroyed();
+        }
+    }
     private void ShowPopUp(string message)
     {
         GameObject popup = Instantiate(popUpPrefab, transform.position, Quaternion.identity);
@@ -199,5 +215,10 @@ public class Player : MonoBehaviour
     public void AddSpeed(float f)
     {
         speed += f;
+    }
+    public void SetShield(bool state)
+    {
+        isShielded = state;
+        shield.SetActive(state);
     }
 }

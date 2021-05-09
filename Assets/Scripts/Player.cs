@@ -73,8 +73,8 @@ public class Player : MonoBehaviour
     {
         if (!isJumping)
         {
-            float horizontal = Input.GetAxis("Horizontal");
-            //float horizontal = Input.acceleration.x;
+            //float horizontal = Input.GetAxis("Horizontal");
+            float horizontal = Input.acceleration.x;
             if (horizontal > 0.2)
             {
                 horizontal = 1;

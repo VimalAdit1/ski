@@ -21,7 +21,7 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        selected = PlayerPrefs.GetInt("Ship", 0);
+        selected = PlayerPrefs.GetInt("Skin", 0);
         coins = PlayerPrefs.GetInt("Coins", 0);
         owned = PlayerPrefs.GetString("Owned", "0");
         ownedskins = owned.Split(',');
@@ -32,13 +32,13 @@ public class ShopManager : MonoBehaviour
         }
         try
         {
-            scoreText.text = PlayerPrefs.GetInt("highScore", 0).ToString();
+            scoreText.text = "HighScore: "+PlayerPrefs.GetInt("HighScore", 0).ToString();
         }
         catch(Exception e)
         {
 
         }
-        changeShip(0);
+        changeShip(selected);
     }
     // Update is called once per frame
     void Update()
@@ -86,13 +86,12 @@ public class ShopManager : MonoBehaviour
             play.interactable = true;
             buy.gameObject.SetActive(false);
             PlayerPrefs.SetInt("Skin", selected);
-            Debug.Log(selected);
         }
         else
         {
             buy.gameObject.SetActive(true);
             int shipPrice = skins[selected].GetComponent<Player>().price;
-            buy.GetComponentInChildren<Text>().text = shipPrice.ToString();
+            buy.GetComponentInChildren<TMP_Text>().text = shipPrice.ToString();
             if (coins >= shipPrice)
             {
                 buy.interactable = true;

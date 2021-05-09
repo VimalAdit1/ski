@@ -8,20 +8,31 @@ public class CharacterSelect : MonoBehaviour
     public GameObject vcam;
     public GameObject[] skins;
     public GameManager gameManager;
+    public bool isUi;
+    int totalSkins;
     // Start is called before the first frame update
     void Start()
     {
+        totalSkins = skins.Length;
         int selected = PlayerPrefs.GetInt("Skin", 0);
-        Debug.Log(selected);
-        skins[selected].SetActive(true);
-        CinemachineVirtualCamera cam = vcam.GetComponent<CinemachineVirtualCamera>();
-        cam.Follow = skins[selected].transform;
-        gameManager.player = skins[selected];
+        for (int i = 0; i < totalSkins; i++)
+        {
+            skins[i].SetActive(i == selected);
+        }
+        if (!isUi)
+        {
+            CinemachineVirtualCamera cam = vcam.GetComponent<CinemachineVirtualCamera>();
+            cam.Follow = skins[selected].transform;
+            gameManager.player = skins[selected];
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void reload()
     {
-
+        int selected = PlayerPrefs.GetInt("Skin", 0);
+        for (int i = 0; i < totalSkins; i++)
+        {
+            skins[i].SetActive(i==selected);
+        }
     }
 }

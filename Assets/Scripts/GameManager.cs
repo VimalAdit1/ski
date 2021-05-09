@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text gameOverScoreText;
     public TMP_Text gameOverHighScoreText;
     bool isGameRunning;
+    bool isGamePaused;
     int maxObstacles;
     int noOfObstacles;
     float score;
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isGameRunning)
+        if (isGameRunning&&!isGamePaused)
         {
             if (noOfObstacles < maxObstacles)
             {
@@ -194,8 +195,9 @@ public class GameManager : MonoBehaviour
         if (isGameRunning)
         {
             Time.timeScale = 1;
-        }
+        isGamePaused = false;
         pauseMenu.SetActive(false);
+        }
     }
     public void Reset()
     {
@@ -203,6 +205,7 @@ public class GameManager : MonoBehaviour
     }
     public void Pause()
     {
+        isGamePaused = true;
         Time.timeScale = 0;
         pauseMenu.SetActive(true);
     }

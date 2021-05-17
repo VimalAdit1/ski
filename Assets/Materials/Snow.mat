@@ -8,9 +8,9 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Snow
-  m_Shader: {fileID: -6465566751694194690, guid: eefacb841795e95478e09fb5746f2899,
+  m_Shader: {fileID: -6465566751694194690, guid: a17f1421fe134e341b37bdf228b95d04,
     type: 3}
-  m_ShaderKeywords: _NORMALMAP
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -20,6 +20,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2D_F86C5544:
+        m_Texture: {fileID: 2800000, guid: e951283592de9e7469d21fb9352e167b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 2800000, guid: e951283592de9e7469d21fb9352e167b, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -48,6 +52,14 @@ Material:
         m_Texture: {fileID: 2800000, guid: 01b4f878aaed2714fac73d5bd81d9415, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_4594B85B_Texture_1:
+        m_Texture: {fileID: 2800000, guid: e951283592de9e7469d21fb9352e167b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_55D0329F_Texture_1:
+        m_Texture: {fileID: 2800000, guid: ce86760e76edf8d448716b241f97276f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_67D070C3_Texture_1:
         m_Texture: {fileID: 2800000, guid: ce86760e76edf8d448716b241f97276f, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -61,6 +73,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - Vector1_531BA353: 2.52
     - Vector1_D76A3CC0: 0.7
     - _AlphaClip: 0
     - _Blend: 0
@@ -85,6 +98,8 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - Color_210E0FE4: {r: 1, g: 1, b: 1, a: 1}
+    - Color_77426C44: {r: 1, g: 1, b: 1, a: 0}
+    - Vector2_19DC62A4: {r: -0.095, g: -0.12, b: 0, a: 0}
     - Vector2_3285BD3B: {r: -0.092, g: -0.123, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}

@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Experimental.Rendering.Universal;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -27,6 +28,7 @@ public class GameManager : MonoBehaviour
     float nextScore;
     float shieldScore;
     bool isShielded;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
             }
             score += 0.05f;
             UpdateScore();
+           
         }
     }
 

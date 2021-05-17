@@ -11,9 +11,9 @@ public class Player : MonoBehaviour
     public Transform spawnner;
     public Transform dontFlip;
     public GameObject popUpPrefab;
-    public GameObject particle;
+    public GameObject jumpParticle;
+    public GameObject trailParticle;
     public GameObject shield;
-    TrailRenderer trail;
     Vector3 direction;
     Vector3 scale;
     Animator animator;
@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public int price;
     bool isShielded;
     Dictionary<string, List<string>> messages;
+    float spawnTime ;
+    float spawnStart = 0.08f;
     void Start()
     {
         shield.SetActive(false);
@@ -32,7 +34,6 @@ public class Player : MonoBehaviour
         scale = transform.localScale;
         speed = 5f;
         animator = GetComponent<Animator>();
-        trail = GetComponentInChildren<TrailRenderer>();
         animator.SetBool("isStraight", true);
         isShielded = false;
     }
@@ -61,6 +62,18 @@ public class Player : MonoBehaviour
     {
         checkInput();
         Move();
+        if (!isJumping)
+        {
+            if (spawnTime <= 0)
+            {
+                Instantiate(trailParticle, transform.position, Quaternion.identity);
+                spawnTime = spawnStart;
+            }
+            else
+            {
+                spawnTime -= Time.deltaTime;
+            }
+        }
     }
 
     private void Move()
@@ -201,8 +214,7 @@ public class Player : MonoBehaviour
     }
     public void TriggerJump()
     {
-        trail.emitting = !trail.emitting;
-        if(trail.emitting)
+        if(!isJumping)
         {
             AudioManager.instance.StartPlaying("Land");
         }
@@ -210,7 +222,7 @@ public class Player : MonoBehaviour
         {
             AudioManager.instance.StartPlaying("Jump");
         }
-        Instantiate(particle, this.transform.position, Quaternion.identity);
+        Instantiate(jumpParticle, this.transform.position, Quaternion.identity);
     }
     public void AddSpeed(float f)
     {

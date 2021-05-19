@@ -17,14 +17,17 @@ public class Player : MonoBehaviour
     Vector3 direction;
     Vector3 scale;
     Animator animator;
-    bool isJumping = false;
-    public bool inAir = false;
+    bool inAir;
     float speed;
+    float horizontal = 0;
     public int price;
     bool isShielded;
+    bool isSwipeEnabled;
     Dictionary<string, List<string>> messages;
     float spawnTime ;
     float spawnStart = 0.08f;
+    Vector3 startPosition;
+    Vector3 endPosition;
     void Start()
     {
         shield.SetActive(false);
@@ -32,11 +35,16 @@ public class Player : MonoBehaviour
         direction = Vector2.down;
         spawnner.transform.up = direction;
         scale = transform.localScale;
-        speed = 5f;
+        speed = 8f;
         animator = GetComponent<Animator>();
         animator.SetBool("isStraight", true);
+        isSwipeEnabled = PlayerPrefs.GetInt("Swipe", 0) == 1;
         isShielded = false;
+        inAir = false;
+
     }
+
+  
 
     private void initializeMessages()
     {
@@ -60,9 +68,16 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        checkInput();
+        if (!isSwipeEnabled)
+        {
+            checkInput();
+        }
+        else
+        {
+            GetSwipeInput();
+        }
         Move();
-        if (!isJumping)
+        if (!inAir)
         {
             if (spawnTime <= 0)
             {
@@ -78,16 +93,44 @@ public class Player : MonoBehaviour
 
     private void Move()
     {
-        transform.position = transform.position  + direction* Time.deltaTime*speed;
+        if (horizontal == 1)
+        {
+            direction = new Vector2(1f, -1f);
+            scale = transform.localScale;
+            if (scale.x < 0)
+            {
+                scale.x = -scale.x;
+            }
+            transform.localScale = scale;
+            animator.SetBool("isStraight", false);
+        }
+        else if (horizontal == -1)
+
+        {
+            direction = new Vector2(-1f, -1f);
+            scale = transform.localScale;
+            if (scale.x > 0)
+            {
+                scale.x = -scale.x;
+            }
+            transform.localScale = scale;
+            animator.SetBool("isStraight", false);
+        }
+        else
+        {
+            direction = Vector2.down;
+            animator.SetBool("isStraight", true);
+        }
+        transform.position = transform.position + direction * Time.deltaTime * speed;
         spawnner.transform.up = direction;
     }
 
     private void checkInput()
     {
-        if (!isJumping)
+        if (!inAir)
         {
-            //float horizontal = Input.GetAxis("Horizontal");
-            float horizontal = Input.acceleration.x;
+            //horizontal = Input.GetAxis("Horizontal");
+            horizontal = Input.acceleration.x;
             if (horizontal > 0.2)
             {
                 horizontal = 1;
@@ -105,34 +148,7 @@ public class Player : MonoBehaviour
 
                 StartCoroutine(Jump());
             }
-            if (horizontal == 1)
-            {
-                direction = new Vector2(1f, -1f);
-                scale = transform.localScale;
-                if (scale.x < 0)
-                {
-                    scale.x = -scale.x;
-                }
-                transform.localScale = scale;
-                animator.SetBool("isStraight", false);
-            }
-            else if (horizontal == -1)
-
-            {
-                direction = new Vector2(-1f, -1f);
-                scale = transform.localScale;
-                if (scale.x > 0)
-                {
-                    scale.x = -scale.x;
-                }
-                transform.localScale = scale;
-                animator.SetBool("isStraight", false);
-            }
-            else
-            {
-                direction = Vector2.down;
-                animator.SetBool("isStraight", true);
-            }
+            
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
@@ -197,7 +213,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Jump()
     {
-        isJumping = true;
+        
         ShowPopUp(getRandomMessage("Jump"));
         gameManager.AddScore(12f);
         gameManager.AddCoin(15);
@@ -205,7 +221,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(.5f);
        
         animator.SetBool("isJumping", false);
-        isJumping = false;
         
     }
     public void SetSpeed(float f)
@@ -214,7 +229,7 @@ public class Player : MonoBehaviour
     }
     public void TriggerJump()
     {
-        if(!isJumping)
+        if(inAir)
         {
             AudioManager.instance.StartPlaying("Land");
         }
@@ -223,6 +238,7 @@ public class Player : MonoBehaviour
             AudioManager.instance.StartPlaying("Jump");
         }
         Instantiate(jumpParticle, this.transform.position, Quaternion.identity);
+        inAir = !inAir;
     }
     public void AddSpeed(float f)
     {
@@ -232,5 +248,56 @@ public class Player : MonoBehaviour
     {
         isShielded = state;
         shield.SetActive(state);
+    }
+    void GetSwipeInput()
+    {
+        foreach (Touch touch in Input.touches)
+        {
+            if (touch.phase == TouchPhase.Began)
+            {
+                startPosition = touch.position;
+                endPosition = touch.position;
+            }
+
+            if (touch.phase == TouchPhase.Moved|| touch.phase == TouchPhase.Ended)
+            {
+                endPosition = touch.position;
+                if ((endPosition - startPosition).magnitude > 20)
+                {
+                    DetectSwipe();
+                }
+            }
+        }
+    }
+    void DetectSwipe()
+    {
+        if (!inAir)
+        {
+            Vector2 Distance = endPosition - startPosition;
+            float xDistance = Mathf.Abs(Distance.x);
+            float yDistance = Mathf.Abs(Distance.y);
+            if (xDistance > yDistance)
+            {
+                if (Distance.x > 0)
+                {
+                    horizontal = 1;
+                }
+                else
+                {
+                    horizontal = -1;
+                }
+            }
+            else
+            {
+                if (Distance.y < 0)
+                {
+                    horizontal = 0;
+                }
+                else
+                {
+                    StartCoroutine(Jump());
+                }
+            }
+        }
     }
 }

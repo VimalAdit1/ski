@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     Vector3 scale;
     Animator animator;
     bool inAir;
+    bool isJumping;
     float speed;
     float horizontal = 0;
     public int price;
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
         isSwipeEnabled = PlayerPrefs.GetInt("Swipe", 0) == 1;
         isShielded = false;
         inAir = false;
-
+        isJumping = false;
     }
 
   
@@ -213,15 +214,17 @@ public class Player : MonoBehaviour
 
     IEnumerator Jump()
     {
-        
-        ShowPopUp(getRandomMessage("Jump"));
-        gameManager.AddScore(12f);
-        gameManager.AddCoin(15);
-        animator.SetBool("isJumping",true);
-        yield return new WaitForSeconds(.5f);
-       
-        animator.SetBool("isJumping", false);
-        
+        if (!isJumping)
+        {
+            isJumping = true;
+            ShowPopUp(getRandomMessage("Jump"));
+            gameManager.AddScore(12f);
+            gameManager.AddCoin(15);
+            animator.SetBool("isJumping", true);
+            yield return new WaitForSeconds(.5f);
+
+            animator.SetBool("isJumping", false);
+        }
     }
     public void SetSpeed(float f)
     {
@@ -232,10 +235,13 @@ public class Player : MonoBehaviour
         if(inAir)
         {
             AudioManager.instance.StartPlaying("Land");
+            isJumping = false;
+            Camera.instance.ShakeScreen(3, 0.2f);
         }
         else
         {
             AudioManager.instance.StartPlaying("Jump");
+            Camera.instance.ShakeScreen(1, 0.2f);
         }
         Instantiate(jumpParticle, this.transform.position, Quaternion.identity);
         inAir = !inAir;

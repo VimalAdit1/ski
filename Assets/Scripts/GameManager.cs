@@ -1,11 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
-using UnityEngine.Experimental.Rendering.Universal;
 using TMPro;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,7 +25,7 @@ public class GameManager : MonoBehaviour
     float nextScore;
     float shieldScore;
     bool isShielded;
-   
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +52,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isGameRunning&&!isGamePaused)
+        if (isGameRunning && !isGamePaused)
         {
             if (noOfObstacles < maxObstacles)
             {
@@ -64,7 +61,7 @@ public class GameManager : MonoBehaviour
             }
             score += 0.05f;
             UpdateScore();
-           
+
         }
     }
 
@@ -77,7 +74,7 @@ public class GameManager : MonoBehaviour
 
     private void CheckShield()
     {
-        if(score>shieldScore&&!isShielded)
+        if (score > shieldScore && !isShielded)
         {
             shieldButton.SetActive(true);
         }
@@ -102,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateSpeed()
     {
-        if(score>=nextScore)
+        if (score >= nextScore)
         {
             nextScore = score + (score / 1.5f);
             player.GetComponent<Player>().AddSpeed(0.3f);
@@ -111,8 +108,9 @@ public class GameManager : MonoBehaviour
 
     private void SpawnObstacles()
     {
-       foreach(GameObject spawnner in spawnners)
-        {if (noOfObstacles < maxObstacles)
+        foreach (GameObject spawnner in spawnners)
+        {
+            if (noOfObstacles < maxObstacles)
             {
                 GameObject obstacle = Instantiate(obstacles[(int)UnityEngine.Random.Range(0, obstacles.Length)]);
                 obstacle.GetComponent<Obstacle>().player = player;
@@ -139,15 +137,15 @@ public class GameManager : MonoBehaviour
             UpdateGameOverScore();
             UpdateGameOverHighScore();
         }
-        catch(Exception e)
+        catch (Exception e)
         { }
     }
 
     private void UpdateGameOverHighScore()
     {
-        int highScore = PlayerPrefs.GetInt("HighScore",0);
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
         string message;
-        if((int)score>highScore)
+        if ((int)score > highScore)
         {
             highScore = (int)score;
             message = "New High Score !!!:" + highScore;
@@ -170,7 +168,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    public  void Destroyed()
+    public void Destroyed()
     {
         noOfObstacles--;
     }
@@ -198,8 +196,8 @@ public class GameManager : MonoBehaviour
         if (isGameRunning)
         {
             Time.timeScale = 1;
-        isGamePaused = false;
-        pauseMenu.SetActive(false);
+            isGamePaused = false;
+            pauseMenu.SetActive(false);
         }
     }
     public void Reset()
@@ -225,19 +223,21 @@ public class GameManager : MonoBehaviour
             coinsText.text = coins.ToString();
             PlayerPrefs.SetInt("Coins", coins);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
 
         }
     }
     public void DestroyAll()
     {
-       Obstacle[] liveObstacles = FindObjectsOfType<Obstacle>();
-        foreach(Obstacle o in liveObstacles)
+        Obstacle[] liveObstacles = FindObjectsOfType<Obstacle>();
+        foreach (Obstacle o in liveObstacles)
         {
             Destroy(o.gameObject);
         }
         noOfObstacles = 0;
         AudioManager.instance.StartPlaying("GameOver");
     }
+
 }
+    

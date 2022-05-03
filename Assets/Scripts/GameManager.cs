@@ -7,6 +7,7 @@ using Cinemachine;
 public class GameManager : MonoBehaviour
 {
     public GameObject[] obstacles;
+    public GameObject[] props;
     public GameObject player;
     public GameObject[] spawnners;
     public GameObject gameOverUI;
@@ -19,7 +20,9 @@ public class GameManager : MonoBehaviour
     bool isGameRunning;
     bool isGamePaused;
     int maxObstacles;
-    int noOfObstacles;
+    int noOfObstacles; 
+    int maxProps=8;
+    int noOfprops;
     float score;
     int coins;
     float nextScore;
@@ -39,7 +42,7 @@ public class GameManager : MonoBehaviour
         {
             isGameRunning = true;
         }
-        maxObstacles = 20;
+        maxObstacles = 8;
         noOfObstacles = 0;
         score = 0;
         coins = PlayerPrefs.GetInt("Coins", 0);
@@ -57,6 +60,7 @@ public class GameManager : MonoBehaviour
             if (noOfObstacles < maxObstacles)
             {
                 SpawnObstacles();
+                SpawnProps();
                 //score += 1;
             }
             score += 0.05f;
@@ -120,6 +124,20 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    private void SpawnProps()
+    {
+        foreach (GameObject spawnner in spawnners)
+        {
+            if (noOfprops < maxProps)
+            {
+                GameObject obstacle = Instantiate(props[(int)UnityEngine.Random.Range(0, props.Length)]);
+                obstacle.GetComponent<Obstacle>().player = player;
+                obstacle.GetComponent<Obstacle>().gameManager = this;
+                obstacle.transform.position = (Vector2)spawnner.transform.position + UnityEngine.Random.insideUnitCircle * 5;
+                noOfprops++;
+            }
+        }
+    }
 
     public void GameOver()
     {
@@ -171,6 +189,10 @@ public class GameManager : MonoBehaviour
     public void Destroyed()
     {
         noOfObstacles--;
+    }
+    public void DestroyProp()
+    {
+        noOfprops--;
     }
 
     public void AddScore(float amount)

@@ -5,6 +5,7 @@ public class Obstacle : MonoBehaviour
 {
     public GameObject player;
     public GameManager gameManager;
+    public bool isProp = false;
     Renderer renderer;
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,10 @@ public class Obstacle : MonoBehaviour
     {
         if(transform.position.y>player.transform.position.y&&!renderer.isVisible)
         {
+            if(isProp)
+            {
+                gameManager.DestroyProp();
+            }
             gameManager.Destroyed();
             Destroy(gameObject);
         }

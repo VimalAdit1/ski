@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &9727551
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -13039,6 +13039,7 @@ MonoBehaviour:
   - {fileID: 3603695386905754453, guid: 26922adfd7078764c8f64f07dc375667, type: 3}
   - {fileID: 192278465266367197, guid: c27958096ca54ae4fa3174c111cae59c, type: 3}
   - {fileID: 4381724376202893529, guid: e273c227dd79bbc4bbe69d306dd25809, type: 3}
+  props: []
   player: {fileID: 1278638747}
   spawnners:
   - {fileID: 793562936}
@@ -13190,6 +13191,9 @@ MonoBehaviour:
   - {fileID: 1655387665404620902, guid: 637bedbdfbcb57641af51a5b26e3afe7, type: 3}
   - {fileID: 6071889648942790438, guid: f1f6f8fcf9bd80e4abf7d7a4b4140cf6, type: 3}
   - {fileID: 4028687896194965389, guid: d32b5275b5b50934f8767f03792f2d09, type: 3}
+  props:
+  - {fileID: 5304348041751726182, guid: a20672d855b9f3d4d849a0548529ff4d, type: 3}
+  - {fileID: 2699489975683727446, guid: f6cb63b9abb4d3846ab300fc1d1ad67d, type: 3}
   player: {fileID: 0}
   spawnners:
   - {fileID: 793562936}
@@ -13891,7 +13895,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1673778767
 MonoBehaviour:
   m_ObjectHideFlags: 0
